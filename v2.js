@@ -8,12 +8,7 @@ var colors = require('css-color-names'),
     fs = require('fs'),
     path = require('path'),
     utils = require('./utils'),
-    SVGO = require('svgo'),
-    svgo = new SVGO({
-        plugins: [{
-            sortDefsChildren: false
-        }]
-    }),
+    svgo = require('svgo'),
     TEMPLATE = dot.template(fs.readFileSync(path.join(__dirname, 'templates', 'v2.svg'), 'utf-8')),
     COLOR_REGEX             = /^[0-9a-f]{6}$/i,
     STROKE_REGEX            = /^s\{(.+?)\}$/i,
@@ -99,13 +94,17 @@ function sectionsToData(sections) {
     return badgeData;
 }
 
-
 module.exports = function badge_v2(sections, callback) {
     var raw = TEMPLATE(sectionsToData(sections));
-    return svgo.optimize(raw).then(function(optimized) {
-        if (callback) callback(undefined, optimized.data);
-        return optimized.data;
-    });
+    // TODO: shair: re-enable optimization for everything when you figure out how to use svgo
+    var optimized;
+    try {
+        optimized = svgo.optimize(raw).data
+    } catch (e) {
+        optimized = raw
+    }
+    if (callback) callback(undefined, optimized);
+    return Promise.resolve(optimized);
 };
 
 

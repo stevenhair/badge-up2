@@ -1,22 +1,20 @@
 # badge-up
 
-[![npm](https://img.shields.io/npm/v/badge-up.svg?maxAge=2592000)](https://www.npmjs.com/package/badge-up)
-[![downloads](https://img.shields.io/npm/dt/badge-up.svg?maxAge=2592000)](https://www.npmjs.com/package/badge-up)
-[![build](https://cd.screwdriver.cd/pipelines/62/badge?maxAge=2592000)](https://cd.screwdriver.cd/pipelines/62)
-[![coverage](https://coveralls.io/repos/github/yahoo/badge-up/badge.svg)](https://coveralls.io/github/yahoo/badge-up)
+[![npm](https://img.shields.io/npm/v/badge-up2.svg?maxAge=2592000)](https://www.npmjs.com/package/badge-up2)
+[![downloads](https://img.shields.io/npm/dt/badge-up2.svg?maxAge=2592000)](https://www.npmjs.com/package/badge-up2)
 
-This is a simple library that generates SVG badges without Cairo.
+This is a simple library that generates SVG badges, based on [badge-up](https://www.npmjs.com/package/badge-up).
 
 
 ## Install
 
-`npm install badge-up`
+`npm install badge-up2`
 
 
 ## V1 Usage
 
 ```js
-const badge = require('badge-up');
+const badge = require('badge-up2');
 badge('batman', 'component', badge.colors.green, function (error, svg) {
     // some callback
 });
@@ -30,7 +28,7 @@ found in `badge.colors`.
 You can alternatively use the returned `Promise`:
 
 ```js
-const badge = require('badge-up');
+const badge = require('badge-up2');
 (async () => {
 try {
     const svg = await badge('batman', 'component', badge.colors.green);
@@ -58,10 +56,10 @@ The following attributes are supported:
 
 The default color for the first section is `696969` and `d3d3d3` for subsequent sections.
 
-Any section can have mulitple lines by putting newlines in its text.
+Any section can have multiple lines by putting newlines in its text.
 
 ```js
-const badge = require('badge-up');
+const badge = require('badge-up2');
 const sections = [
     'foo/far;fun',
     [ 'bar\nbaz', 'orange'],
@@ -78,7 +76,7 @@ Produces: ![example](https://cdn.rawgit.com/yahoo/badge-up/master/test/testData/
 You can also use the returned `Promise`:
 
 ```js
-const badge = require('badge-up');
+const badge = require('badge-up2');
 const sections = [
     'foo/far;fun',
     [ 'bar\nbaz', 'orange'],

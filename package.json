@@ -1,7 +1,7 @@
 {
-  "name": "badge-up",
-  "version": "2.3.0",
-  "description": "A module that produces hot badges without the need of Cairo",
+  "name": "badge-up2",
+  "version": "1.0.0",
+  "description": "A module that produces SVG badges",
   "main": "index.js",
   "nyc": {
     "reporter": [
@@ -16,43 +16,28 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:yahoo/badge-up.git"
+    "url": "git@github.com:stevenhair/badge-up2.git"
   },
-  "homepage": "https://github.com/yahoo/badge-up",
+  "homepage": "https://github.com/stevenhair/badge-up2#readme",
   "engines": {
-    "node": ">=10.0.0"
+    "node": ">=16"
   },
-  "bugs": "https://github.com/yahoo/badge-up/issues",
+  "bugs": "https://github.com/stevenhair/badge-up2/issues",
   "keywords": [
-    "badge",
-    "yahoo"
+    "badge"
   ],
   "license": "BSD-3-Clause",
-  "author": "St. John Johnson <stjohn@yahoo-inc.com>",
-  "contributors": [
-    "Darren Matsumoto <bobafett@yahoo-inc.com>",
-    "Drew Folta <folta@yahoo-inc.com>",
-    "Noah Katzman <nkatzman@yahoo-inc.com>",
-    "Peter Peterson <petey@yahoo-inc.com>",
-    "Robert Ames <rames@yahoo-inc.com>"
-  ],
-  "release": {
-    "debug": false,
-    "verifyConditions": {
-      "path": "./node_modules/semantic-release/src/lib/plugin-noop.js"
-    }
-  },
+  "author": "Steve Hair <me@stevenhair.com>",
   "devDependencies": {
     "chai": "^4.2.0",
-    "coveralls": "^3.0.11",
-    "eslint": "^6.8.0",
-    "mocha": "^7.1.1",
+    "eslint": "^8.50.0",
+    "mocha": "^10.2.0",
     "nyc": "^15.0.0",
-    "sinon": "^9.0.1"
+    "sinon": "^16.0.0"
   },
   "dependencies": {
     "css-color-names": "~1.0.1",
     "dot": "^1.1.3",
-    "svgo": "^1.3.2"
+    "svgo": "^3.0.2"
   }
 }
