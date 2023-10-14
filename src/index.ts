@@ -4,6 +4,9 @@ import * as path from 'path';
 import svgo from 'svgo';
 
 import { escapeXml, textWidth } from './utils';
+import v2 from './v2';
+
+export { v2 };
 
 export const colors = {
     brightgreen: '#4C1',
