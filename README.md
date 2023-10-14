@@ -1,4 +1,8 @@
-# badge-up
+# badge-up2
+
+
+[![Build](https://github.com/stevenhair/badge-up2/actions/workflows/test.yml/badge.svg)](https://github.com/stevenhair/badge-up2/actions/workflows/test.yml)
+[![codecov](https://codecov.io/gh/stevenhair/badge-up2/graph/badge.svg?token=TJ5H79MK4E)](https://codecov.io/gh/stevenhair/badge-up2)
 
 [![npm](https://img.shields.io/npm/v/badge-up2.svg?maxAge=2592000)](https://www.npmjs.com/package/badge-up2)
 [![downloads](https://img.shields.io/npm/dt/badge-up2.svg?maxAge=2592000)](https://www.npmjs.com/package/badge-up2)
@@ -15,28 +19,13 @@ This is a simple library that generates SVG badges, based on [badge-up](https://
 
 ```js
 const badge = require('badge-up2');
-badge('batman', 'component', badge.colors.green, function (error, svg) {
-    // some callback
-});
+const svg = badge('batman', 'component', badge.colors.green);
 ```
 
 Produces: ![example](https://cdn.rawgit.com/yahoo/badge-up/master/test/testData/good.svg)
 
 The color argument can be a CSS color, or one of the specially named colors
 found in `badge.colors`.
-
-You can alternatively use the returned `Promise`:
-
-```js
-const badge = require('badge-up2');
-(async () => {
-try {
-    const svg = await badge('batman', 'component', badge.colors.green);
-} catch (error) {
-    //
-}
-}());
-```
 
 ## V2 Usage
 
@@ -66,29 +55,7 @@ const sections = [
     [ 'mork "mindy"', 'olive', 's{white}'],
     [ '<∀>', 'moccasin']
 ];
-badge.v2(sections, function (error, svg) {
-    // some callback
-});
+const svg = badge.v2(sections);
 ```
 
 Produces: ![example](https://cdn.rawgit.com/yahoo/badge-up/master/test/testData/v2-example.svg)
-
-You can also use the returned `Promise`:
-
-```js
-const badge = require('badge-up2');
-const sections = [
-    'foo/far;fun',
-    [ 'bar\nbaz', 'orange'],
-    [ 'mork "mindy"', 'olive', 's{white}'],
-    [ '<∀>', 'moccasin']
-];
-
-(async () => {
-try {
-    const svg = await badge.v2(sections);
-} catch (error) {
-  //
-}
-}());
-```
