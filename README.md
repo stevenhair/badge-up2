@@ -1,5 +1,9 @@
 # badge-up2
 
+
+[![Build](https://github.com/stevenhair/badge-up2/actions/workflows/test.yml/badge.svg)](https://github.com/stevenhair/badge-up2/actions/workflows/test.yml)
+[![codecov](https://codecov.io/gh/stevenhair/badge-up2/graph/badge.svg?token=TJ5H79MK4E)](https://codecov.io/gh/stevenhair/badge-up2)
+
 [![npm](https://img.shields.io/npm/v/badge-up2.svg?maxAge=2592000)](https://www.npmjs.com/package/badge-up2)
 [![downloads](https://img.shields.io/npm/dt/badge-up2.svg?maxAge=2592000)](https://www.npmjs.com/package/badge-up2)
 
