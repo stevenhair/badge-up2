@@ -4,33 +4,34 @@ import fs from 'fs';
 import path from 'path';
 import svgo from 'svgo';
 
+import { getColorCode } from './color';
 import { textWidth } from './utils';
 
-export type Section = string | [string] | string[]; // TODO: shair: this last one should be a tuple type
+export type Section = string | [string] | string[];
 
-interface LineData {
+interface LineConfig {
     x: number;
     y: number;
     text: string;
 }
 
-interface SectionData {
+interface SectionConfig {
     x: number;
+    height: number;
     width: number;
-    lines: LineData[];
-    color?: string;
-    stroke?: string;
+    lines: LineConfig[];
+    color: string;
+    stroke: string | null;
 }
 
-interface BadgeData {
+interface BadgeConfig {
     width: number;
     height: number;
-    sections: SectionData[];
+    sections: SectionConfig[];
 }
 
 const TEMPLATE = dot.template(fs.readFileSync(path.join(__dirname, 'templates', 'v2.svg'), 'utf-8'));
-const COLOR_REGEX = /^[0-9a-f]{6}$/i;
-const STROKE_REGEX = /^s\{(.+?)}$/i;
+
 const DEFAULT_COLOR_FIRST = colors.dimgrey;
 const DEFAULT_COLOR_REST = colors.lightgrey;
 const PAD_X = 5;
@@ -39,73 +40,24 @@ const LINE_HEIGHT = 12;
 const DECENDER_HEIGHT = 2;
 const DEFAULT_LETTER_WIDTH = 8; // probably unicode, hard to guess width
 
-function getColorCode(input: string | keyof typeof colors): string | undefined {
-    if (COLOR_REGEX.test(input)) {
-        return `#${input.toLowerCase()}`;
-    }
-
-    if (Object.hasOwn(colors, input)) {
-        return colors[input as keyof typeof colors];
-    }
-
-    return undefined;
-}
-
 // exported for unit testing
-export function sectionsToData(sections: Section[]): BadgeData {
-    const badgeData: BadgeData = {
+export function sectionsToData(sections: Section[]): BadgeConfig {
+    const badgeConfig: BadgeConfig = {
         width: 0,
         height: 0,
         sections: [],
     };
 
-    sections.forEach((section, s) => {
-        const sectionData: SectionData = {
-            x: 0,
-            width: 0,
-            lines: [],
-        };
-        const text = Array.isArray(section) ? section.shift() : section;
+    sections.forEach((section, index) => {
+        const sectionConfig = buildSection(section, badgeConfig.width, index);
 
-        if (!text) {
-            return;
-        }
-
-        sectionData.x = badgeData.width;
-        sectionData.color = (s === 0 ? DEFAULT_COLOR_FIRST : DEFAULT_COLOR_REST);
-        if (Array.isArray(section)) {
-            section.forEach((attribute) => {
-                // stroke attribute `s{color}` as CSS color or color code in hex
-                const strokeAttribute = STROKE_REGEX.exec(attribute);
-                if (strokeAttribute) {
-                    sectionData.stroke = getColorCode(strokeAttribute[1]);
-                }
-
-                // fill color attribute (without attribute qualifier) as CSS color or color code in hex
-                if (getColorCode(attribute)) {
-                    sectionData.color = getColorCode(attribute);
-                }
-            });
-        }
-        const lines = text.split('\n');
-        lines.forEach(function (line, l) {
-            const lineData: LineData = {
-                x: 0,
-                y: 0,
-                text: line,
-            };
-            const lineWidth = (2 * PAD_X) + textWidth(lineData.text, DEFAULT_LETTER_WIDTH);
-            lineData.x = badgeData.width + PAD_X;
-            lineData.y = (LINE_HEIGHT * l) + PAD_Y + LINE_HEIGHT - DECENDER_HEIGHT;
-            sectionData.lines.push(lineData);
-            sectionData.width = Math.max(sectionData.width, lineWidth);
-        });
-        badgeData.sections.push(sectionData);
-        const sectionHeight = (2 * PAD_Y) + (lines.length * LINE_HEIGHT);
-        badgeData.height = Math.max(badgeData.height, sectionHeight);
-        badgeData.width += sectionData.width;
+        badgeConfig.sections.push(sectionConfig);
+        badgeConfig.height = Math.max(badgeConfig.height, sectionConfig.height);
+        badgeConfig.width += sectionConfig.width;
+        return sectionConfig;
     });
-    return badgeData;
+
+    return badgeConfig;
 }
 
 export default function v2(sections: Section[]): string {
@@ -118,4 +70,48 @@ export default function v2(sections: Section[]): string {
         optimized = raw;
     }
     return optimized;
+}
+
+function buildLines(section: Section, badgeWidth: number): LineConfig[] {
+    const text = (Array.isArray(section) ? section[0] : section) ?? '';
+    return text.split('\n').map((line, l) => ({
+        x: badgeWidth + PAD_X,
+        y: (LINE_HEIGHT * l) + PAD_Y + LINE_HEIGHT - DECENDER_HEIGHT,
+        text: line,
+    }));
+}
+
+function buildSection(section: Section, badgeWidth: number, index: number): SectionConfig {
+    const lines = buildLines(section, badgeWidth);
+    return {
+        lines,
+        x: badgeWidth,
+        height: (2 * PAD_Y) + (lines.length * LINE_HEIGHT),
+        width: Math.max(...lines.map((line) => (2 * PAD_X) + textWidth(line.text, DEFAULT_LETTER_WIDTH))),
+        color: getBackgroundColor(section, index),
+        stroke: getStrokeColor(section),
+    };
+}
+
+function getBackgroundColor(section: Section, index: number): string {
+    let colorCode;
+    if (Array.isArray(section) && section.length > 1) {
+        colorCode = getColorCode(section[1]);
+    }
+
+    if (!colorCode) {
+        // the first section gets a different default badge color
+        colorCode = index === 0 ? DEFAULT_COLOR_FIRST : DEFAULT_COLOR_REST;
+    }
+
+    return colorCode;
+}
+
+function getStrokeColor(section: Section): string | null {
+    let colorCode = null;
+    if (Array.isArray(section) && section.length > 2) {
+        colorCode = getColorCode(section[2]);
+    }
+
+    return colorCode;
 }

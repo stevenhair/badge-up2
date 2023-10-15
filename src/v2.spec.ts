@@ -22,17 +22,17 @@ describe('v2', () => {
         });
 
         test('uses stroke attributes', () => {
-            const sections = ['foo', ['bar', 'd3d3d3', 's{ffffff}']];
+            const sections = ['foo', ['bar', 'd3d3d3', 'ffffff']];
             const have = sectionsToData(sections);
-            expect(have.sections[0].stroke).toBeUndefined();
+            expect(have.sections[0].stroke).toBeNull();
             expect(have.sections[1].stroke).toBe('#ffffff');
         });
 
         test('ignores stroke attributes with invalid color', () => {
-            const sections = ['foo', ['bar', 'd3d3d3', 's{foobar}']];
+            const sections = ['foo', ['bar', 'd3d3d3', 'foobar']];
             const have = sectionsToData(sections);
-            expect(have.sections[0].stroke).toBeUndefined();
-            expect(have.sections[1].stroke).toBeUndefined();
+            expect(have.sections[0].stroke).toBeNull();
+            expect(have.sections[1].stroke).toBeNull();
         });
 
         test('lays out two sections', () => {
@@ -43,6 +43,8 @@ describe('v2', () => {
                 sections: [
                     {
                         x: 0,
+                        height: 20,
+                        stroke: null,
                         width: 28,
                         color: '#696969',
                         lines: [
@@ -55,6 +57,8 @@ describe('v2', () => {
                     },
                     {
                         x: 28,
+                        height: 20,
+                        stroke: null,
                         width: 29,
                         color: '#d3d3d3',
                         lines: [
@@ -79,6 +83,8 @@ describe('v2', () => {
                 sections: [
                     {
                         x: 0,
+                        height: 20,
+                        stroke: null,
                         width: 28,
                         color: '#696969',
                         lines: [
@@ -91,6 +97,8 @@ describe('v2', () => {
                     },
                     {
                         x: 28,
+                        height: 20,
+                        stroke: null,
                         width: 29,
                         color: '#d3d3d3',
                         lines: [
@@ -120,7 +128,9 @@ describe('v2', () => {
                 sections: [
                     {
                         x: 0,
+                        height: 20,
                         width: 70,
+                        stroke: null,
                         color: '#696969',
                         lines: [
                             {
@@ -132,7 +142,9 @@ describe('v2', () => {
                     },
                     {
                         x: 70,
+                        height: 32,
                         width: 30,
+                        stroke: null,
                         color: '#ffa500',
                         lines: [
                             {
@@ -149,7 +161,9 @@ describe('v2', () => {
                     },
                     {
                         x: 100,
+                        height: 20,
                         width: 86,
+                        stroke: null,
                         color: '#808000',
                         lines: [
                             {
@@ -161,7 +175,9 @@ describe('v2', () => {
                     },
                     {
                         x: 186,
+                        height: 20,
                         width: 33,
+                        stroke: null,
                         color: '#ffe4b5',
                         lines: [
                             {
@@ -195,7 +211,7 @@ describe('v2', () => {
             const sections = [
                 'foo/far;fun',
                 ['bar\nbaz', 'orange'],
-                ['mork "mindy"', 'olive', 's{white}'],
+                ['mork "mindy"', 'olive', 'white'],
                 ['<∀>', 'moccasin'],
             ];
 
@@ -204,7 +220,7 @@ describe('v2', () => {
         });
 
         test('renders stroke correctly', async () => {
-            const sections = ['foo', ['bar', 'd3d3d3', 's{white}']];
+            const sections = ['foo', ['bar', 'd3d3d3', 'white']];
             const svg = v2(sections);
             expect(svg).toEqual(await getMockBadge('v2-foo-bar-stroke'));
         });

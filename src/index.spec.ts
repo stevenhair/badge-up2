@@ -1,16 +1,18 @@
-import badge, { colors } from './index';
+import { basic, basicColors } from './index';
 import { getMockBadge } from './test-utils/badge-utils';
 
-describe('#index', () => {
-    test('should be able to create a badge', async () => {
-        expect(badge('batman', 'component', colors.green)).toBe(await getMockBadge('good'));
-    });
+describe('index', () => {
+    describe('basic', () => {
+        test('it should be able to create a badge', async () => {
+            expect(basic('batman', 'component', basicColors.green)).toBe(await getMockBadge('good'));
+        });
 
-    test('should be able to create a long badge', async () => {
-        expect(badge('batmanandrobinforever', 'component', colors.green)).toBe(await getMockBadge('long'));
-    });
+        test('it should be able to create a long badge', async () => {
+            expect(basic('batmanandrobinforever', 'component', basicColors.green)).toBe(await getMockBadge('long'));
+        });
 
-    test('should prevent bad xml values', async () => {
-        expect(badge('&<>"\'', '&<>"\'', colors.green)).toBe(await getMockBadge('xml'));
+        test('it should prevent bad xml values', async () => {
+            expect(basic('&<>"\'', '&<>"\'', basicColors.green)).toBe(await getMockBadge('xml'));
+        });
     });
 });
