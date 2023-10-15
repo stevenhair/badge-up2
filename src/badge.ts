@@ -141,5 +141,5 @@ function buildSection(section: Section, badgeWidth: number): BadgeSection {
 }
 
 function isSectionObject(section: Section): section is SectionConfig {
-    return typeof section !== 'string' && Object.hasOwn(section, 'text');
+    return typeof section !== 'string' && 'text' in section;
 }

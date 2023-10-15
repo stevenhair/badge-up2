@@ -22,7 +22,7 @@ export function getColorCode(input: string | keyof typeof colors): string | null
         return `#${input.toLowerCase().replace('#', '')}`;
     }
 
-    if (Object.hasOwn(colors, input)) {
+    if (input in colors) {
         return colors[input as keyof typeof colors];
     }
 
