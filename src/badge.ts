@@ -46,17 +46,13 @@ const LINE_HEIGHT = 12;
 const DECENDER_HEIGHT = 2;
 
 export function badge(sections: Section[]): string {
-    const raw = TEMPLATE(buildBadgeConfig(sections));
+    const raw = TEMPLATE(buildBadgeConfig(sections))
+        // Working around a bug in svgo: https://github.com/svg/svgo/issues/1498
+        // Workaround courtesy of brettz9: https://github.com/yahoo/badge-up/pull/21
+        .replace(/&#(x3c|60);/gi, '&lt;')
+        .replace(/&#(x26|38);/gi, '&amp;');
 
-    try {
-        return svgo.optimize(raw).data;
-    } catch (e) {
-        // There is a bug in svgo that erroneously causes it to think that some characters are unencoded.
-        // It's probably pretty rare for those to be in a badge and the badge files are pretty small anyway.
-        // If we get one of those errors, we'll just return an unoptimized version for now.
-        // https://github.com/svg/svgo/issues/1498
-        return raw;
-    }
+    return svgo.optimize(raw).data;
 }
 
 export function basic(field1: string, field2: string, color: string): string {
