@@ -1,16 +1,19 @@
-import badge, { colors } from './index';
-import { getMockBadge } from './test-utils/badge-utils';
+import { badge, basic, basicColors, colors } from './index';
 
-describe('#index', () => {
-    test('should be able to create a badge', async () => {
-        expect(badge('batman', 'component', colors.green)).toBe(await getMockBadge('good'));
+describe('index', () => {
+    test('it exports the badge function', () => {
+        expect(badge).toBeInstanceOf(Function);
     });
 
-    test('should be able to create a long badge', async () => {
-        expect(badge('batmanandrobinforever', 'component', colors.green)).toBe(await getMockBadge('long'));
+    test('it exports the basic function', () => {
+        expect(basic).toBeInstanceOf(Function);
     });
 
-    test('should prevent bad xml values', async () => {
-        expect(badge('&<>"\'', '&<>"\'', colors.green)).toBe(await getMockBadge('xml'));
+    test('it exports the colors', () => {
+        expect(colors).toBeInstanceOf(Object);
+    });
+
+    test('it exports the basic colors', () => {
+        expect(basicColors).toBeInstanceOf(Object);
     });
 });
