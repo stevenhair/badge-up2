@@ -1,7 +1,5 @@
 import colors from 'css-color-names';
 import dot from 'dot';
-import fs from 'fs';
-import path from 'path';
 import svgo from 'svgo';
 
 import { basicColors, getColorCode } from './color';
@@ -36,14 +34,53 @@ interface BadgeConfig {
     sections: BadgeSection[];
 }
 
-const TEMPLATE = dot.template(fs.readFileSync(path.join(__dirname, 'templates', 'v2.svg'), 'utf-8'));
-
 const DEFAULT_COLOR_FIRST = colors.dimgrey;
 const DEFAULT_COLOR_REST = colors.lightgrey;
 const PAD_X = 5;
 const PAD_Y = 4;
 const LINE_HEIGHT = 12;
 const DECENDER_HEIGHT = 2;
+
+const TEMPLATE = dot.template(`
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="{{=it.width}}" height="{{=it.height}}">
+  <defs>
+    <style><![CDATA[
+      text {
+        font-size: 11px;
+        font-family: Verdana,DejaVu Sans,Geneva,sans-serif;
+      }
+      text.shadow {
+        fill: #010101;
+        fill-opacity: .3;
+      }
+      text.high {
+        fill: #ffffff;
+      }
+    ]]></style>
+    <linearGradient id="smooth" x2="0" y2="100%">
+      <stop offset="0" stop-color="#aaa" stop-opacity=".1"/>
+      <stop offset="1" stop-opacity=".1"/>
+    </linearGradient>
+    <mask id="round">
+      <rect width="100%" height="100%" rx="3" fill="#fff"/>
+    </mask>
+  </defs>
+  <g id="bg" mask="url(#round)">
+{{~ it.sections :sec }}
+    <rect x="{{=sec.x}}" width="{{=sec.width}}" height="{{=it.height}}" fill="{{=sec.color}}"{{? sec.stroke}} stroke="{{=sec.stroke}}"{{?}}/>
+{{~}}
+    <rect width="{{=it.width}}" height="{{=it.height}}" fill="url(#smooth)"/>
+  </g>
+  <g id="fg">
+{{~ it.sections :sec }}
+{{~ sec.lines :line }}
+    <text class="shadow" x="{{=line.x+.5}}" y="{{=line.y+1}}">{{! line.text}}</text>
+    <text class="high" x="{{=line.x}}" y="{{=line.y}}">{{! line.text}}</text>
+{{~}}
+{{~}}
+  </g>
+</svg>
+`);
 
 export function badge(sections: Section[]): string {
     const raw = TEMPLATE(buildBadgeConfig(sections))
