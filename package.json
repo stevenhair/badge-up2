@@ -72,7 +72,7 @@
     "collectCoverageFrom": [
       "**/*.ts"
     ],
-    "coverageDirectory": "../coverage",
+    "coverageDirectory": "coverage",
     "testEnvironment": "node",
     "maxWorkers": 1
   }
