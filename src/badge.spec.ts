@@ -1,11 +1,26 @@
+import { badge, basic, buildBadgeConfig } from './badge';
+import { basicColors } from './color';
 import { getMockBadge } from './test-utils/badge-utils';
-import v2, { sectionsToData } from './v2';
 
-describe('v2', () => {
-    describe('sectionsToData()', () => {
+describe('badge', () => {
+    describe('basic', () => {
+        test('it should be able to create a badge', async () => {
+            expect(basic('batman', 'component', basicColors.green)).toBe(await getMockBadge('basic'));
+        });
+
+        test('it should be able to create a long badge', async () => {
+            expect(basic('batmanandrobinforever', 'component', basicColors.green)).toBe(await getMockBadge('basic-long'));
+        });
+
+        test('it should prevent bad xml values', async () => {
+            expect(basic('&<>"\'', '&<>"\'', basicColors.green)).toBe(await getMockBadge('xml'));
+        });
+    });
+
+    describe('buildBadgeConfig()', () => {
         test('uses default colors', () => {
             const sections = ['foo', 'bar', 'baz'];
-            const have = sectionsToData(sections);
+            const have = buildBadgeConfig(sections);
             expect(have.sections[0].color).toBe('#696969');
             expect(have.sections[1].color).toBe('#d3d3d3');
             expect(have.sections[2].color).toBe('#d3d3d3');
@@ -16,7 +31,7 @@ describe('v2', () => {
                 { text: 'foo', color: 'lightgreen' },
                 { text: 'bar', color: 'ef03BB' },
             ];
-            const have = sectionsToData(sections);
+            const have = buildBadgeConfig(sections);
             expect(have.sections[0].color).toBe('#90ee90');
             expect(have.sections[1].color).toBe('#ef03bb');
         });
@@ -26,7 +41,7 @@ describe('v2', () => {
                 'foo',
                 { text: 'bar', color: 'd3d3d3', strokeColor: 'ffffff' },
             ];
-            const have = sectionsToData(sections);
+            const have = buildBadgeConfig(sections);
             expect(have.sections[0].stroke).toBeNull();
             expect(have.sections[1].stroke).toBe('#ffffff');
         });
@@ -36,7 +51,7 @@ describe('v2', () => {
                 'foo',
                 { text: 'bar', color: 'd3d3d3', strokeColor: 'foobar' },
             ];
-            const have = sectionsToData(sections);
+            const have = buildBadgeConfig(sections);
             expect(have.sections[0].stroke).toBeNull();
             expect(have.sections[1].stroke).toBeNull();
         });
@@ -77,7 +92,7 @@ describe('v2', () => {
                     },
                 ],
             };
-            const have = sectionsToData(sections);
+            const have = buildBadgeConfig(sections);
             expect(have).toEqual(want);
         });
 
@@ -120,7 +135,7 @@ describe('v2', () => {
                     },
                 ],
             };
-            const have = sectionsToData(sections);
+            const have = buildBadgeConfig(sections);
             expect(have).toEqual(want);
         });
 
@@ -198,7 +213,7 @@ describe('v2', () => {
                     },
                 ],
             };
-            const have = sectionsToData(sections);
+            const have = buildBadgeConfig(sections);
             expect(have).toEqual(want);
         });
     });
@@ -206,14 +221,14 @@ describe('v2', () => {
     describe('badge()', () => {
         test('renders foo/bar correctly', async () => {
             const sections = ['foo', 'bar'];
-            const svg = v2(sections);
-            expect(svg).toEqual(await getMockBadge('v2-foo-bar'));
+            const svg = badge(sections);
+            expect(svg).toEqual(await getMockBadge('foo-bar'));
         });
 
         test('renders a named color correctly', async () => {
             const sections = ['foo', { text: 'bar', color: 'lightgreen' }];
-            const svg = v2(sections);
-            expect(svg).toEqual(await getMockBadge('v2-one-color'));
+            const svg = badge(sections);
+            expect(svg).toEqual(await getMockBadge('one-color'));
         });
 
         test('renders the example correctly', async () => {
@@ -224,14 +239,14 @@ describe('v2', () => {
                 { text: '<∀>', color: 'moccasin' },
             ];
 
-            const svg = v2(sections);
-            expect(svg).toEqual(await getMockBadge('v2-example'));
+            const svg = badge(sections);
+            expect(svg).toEqual(await getMockBadge('example'));
         });
 
         test('renders stroke correctly', async () => {
             const sections = ['foo', { text: 'bar', color: 'd3d3d3', strokeColor: 'white' }];
-            const svg = v2(sections);
-            expect(svg).toEqual(await getMockBadge('v2-foo-bar-stroke'));
+            const svg = badge(sections);
+            expect(svg).toEqual(await getMockBadge('foo-bar-stroke'));
         });
     });
 });

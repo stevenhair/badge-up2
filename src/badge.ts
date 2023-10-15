@@ -4,7 +4,7 @@ import fs from 'fs';
 import path from 'path';
 import svgo from 'svgo';
 
-import { getColorCode } from './color';
+import { basicColors, getColorCode } from './color';
 import { textWidth } from './text';
 
 export type Section = string | SectionConfig;
@@ -45,8 +45,26 @@ const PAD_Y = 4;
 const LINE_HEIGHT = 12;
 const DECENDER_HEIGHT = 2;
 
+export function badge(sections: Section[]): string {
+    const raw = TEMPLATE(buildBadgeConfig(sections));
+
+    try {
+        return svgo.optimize(raw).data;
+    } catch (e) {
+        // There is a bug in svgo that erroneously causes it to think that some characters are unencoded.
+        // It's probably pretty rare for those to be in a badge and the badge files are pretty small anyway.
+        // If we get one of those errors, we'll just return an unoptimized version for now.
+        // https://github.com/svg/svgo/issues/1498
+        return raw;
+    }
+}
+
+export function basic(field1: string, field2: string, color: string): string {
+    return badge([{ text: field1, color: basicColors.grey }, { text: field2, color }]);
+}
+
 // exported for unit testing
-export function sectionsToData(sections: Section[]): BadgeConfig {
+export function buildBadgeConfig(sections: Section[]): BadgeConfig {
     const badgeConfig: BadgeConfig = {
         width: 0,
         height: 0,
@@ -66,18 +84,6 @@ export function sectionsToData(sections: Section[]): BadgeConfig {
     });
 
     return badgeConfig;
-}
-
-export default function v2(sections: Section[]): string {
-    const raw = TEMPLATE(sectionsToData(sections));
-    // TODO: shair: re-enable optimization for everything when you figure out how to use svgo
-    let optimized;
-    try {
-        optimized = svgo.optimize(raw).data;
-    } catch (e) {
-        optimized = raw;
-    }
-    return optimized;
 }
 
 function buildLines(section: Section, badgeWidth: number): SectionLine[] {
