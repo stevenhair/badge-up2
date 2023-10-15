@@ -21,7 +21,7 @@ const { basic, basicColors } = require('badge-up2');
 const svg = basic('batman', 'component', basicColors.green);
 ```
 
-![example](src/test-utils/test-data/basic.svg)
+![example](https://raw.githubusercontent.com/stevenhair/badge-up2/master/src/test-data/basic.svg)
 
 The color argument can be a CSS color, or one of the specially named colors
 found in `basicColors`.
@@ -51,4 +51,4 @@ const sections = [
 const svg = badge(sections);
 ```
 
-![example](src/test-utils/test-data/example.svg)
+![example](https://raw.githubusercontent.com/stevenhair/badge-up2/master/src/test-data/example.svg)
