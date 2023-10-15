@@ -5,29 +5,35 @@ import path from 'path';
 import svgo from 'svgo';
 
 import { getColorCode } from './color';
-import { textWidth } from './utils';
+import { textWidth } from './text';
 
-export type Section = string | [string] | string[];
+export type Section = string | SectionConfig;
 
-interface LineConfig {
+interface SectionConfig {
+    text: string;
+    color?: string;
+    strokeColor?: string;
+}
+
+interface SectionLine {
     x: number;
     y: number;
     text: string;
 }
 
-interface SectionConfig {
+interface BadgeSection {
     x: number;
     height: number;
     width: number;
-    lines: LineConfig[];
-    color: string;
+    lines: SectionLine[];
+    color: string | null;
     stroke: string | null;
 }
 
 interface BadgeConfig {
     width: number;
     height: number;
-    sections: SectionConfig[];
+    sections: BadgeSection[];
 }
 
 const TEMPLATE = dot.template(fs.readFileSync(path.join(__dirname, 'templates', 'v2.svg'), 'utf-8'));
@@ -38,7 +44,6 @@ const PAD_X = 5;
 const PAD_Y = 4;
 const LINE_HEIGHT = 12;
 const DECENDER_HEIGHT = 2;
-const DEFAULT_LETTER_WIDTH = 8; // probably unicode, hard to guess width
 
 // exported for unit testing
 export function sectionsToData(sections: Section[]): BadgeConfig {
@@ -49,7 +54,10 @@ export function sectionsToData(sections: Section[]): BadgeConfig {
     };
 
     sections.forEach((section, index) => {
-        const sectionConfig = buildSection(section, badgeConfig.width, index);
+        const sectionConfig = buildSection(section, badgeConfig.width);
+
+        const defaultColor = index === 0 ? DEFAULT_COLOR_FIRST : DEFAULT_COLOR_REST;
+        sectionConfig.color = sectionConfig.color ?? defaultColor;
 
         badgeConfig.sections.push(sectionConfig);
         badgeConfig.height = Math.max(badgeConfig.height, sectionConfig.height);
@@ -72,8 +80,8 @@ export default function v2(sections: Section[]): string {
     return optimized;
 }
 
-function buildLines(section: Section, badgeWidth: number): LineConfig[] {
-    const text = (Array.isArray(section) ? section[0] : section) ?? '';
+function buildLines(section: Section, badgeWidth: number): SectionLine[] {
+    const text = isSectionObject(section) ? section.text : section;
     return text.split('\n').map((line, l) => ({
         x: badgeWidth + PAD_X,
         y: (LINE_HEIGHT * l) + PAD_Y + LINE_HEIGHT - DECENDER_HEIGHT,
@@ -81,37 +89,18 @@ function buildLines(section: Section, badgeWidth: number): LineConfig[] {
     }));
 }
 
-function buildSection(section: Section, badgeWidth: number, index: number): SectionConfig {
+function buildSection(section: Section, badgeWidth: number): BadgeSection {
     const lines = buildLines(section, badgeWidth);
     return {
         lines,
         x: badgeWidth,
         height: (2 * PAD_Y) + (lines.length * LINE_HEIGHT),
-        width: Math.max(...lines.map((line) => (2 * PAD_X) + textWidth(line.text, DEFAULT_LETTER_WIDTH))),
-        color: getBackgroundColor(section, index),
-        stroke: getStrokeColor(section),
+        width: Math.max(...lines.map((line) => (2 * PAD_X) + textWidth(line.text))),
+        color: isSectionObject(section) && section.color ? getColorCode(section.color) : null,
+        stroke: isSectionObject(section) && section.strokeColor ? getColorCode(section.strokeColor) : null,
     };
 }
 
-function getBackgroundColor(section: Section, index: number): string {
-    let colorCode;
-    if (Array.isArray(section) && section.length > 1) {
-        colorCode = getColorCode(section[1]);
-    }
-
-    if (!colorCode) {
-        // the first section gets a different default badge color
-        colorCode = index === 0 ? DEFAULT_COLOR_FIRST : DEFAULT_COLOR_REST;
-    }
-
-    return colorCode;
-}
-
-function getStrokeColor(section: Section): string | null {
-    let colorCode = null;
-    if (Array.isArray(section) && section.length > 2) {
-        colorCode = getColorCode(section[2]);
-    }
-
-    return colorCode;
+function isSectionObject(section: Section): section is SectionConfig {
+    return typeof section !== 'string' && Object.hasOwn(section, 'text');
 }

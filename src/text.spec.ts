@@ -1,6 +1,6 @@
-import { escapeXml, textWidth } from './utils';
+import { escapeXml, textWidth } from './text';
 
-describe('utils', () => {
+describe('text', () => {
     describe('escapeXml()', function () {
         test('should escape all funky characters', function () {
             expect(escapeXml('&')).toBe('&amp;');
@@ -22,12 +22,8 @@ describe('utils', () => {
             expect(textWidth('hi')).toBe(11);
         });
 
-        test("shouldn't measure weird characters by default", () => {
-            expect(textWidth('HI∃')).toBe(14);
-        });
-
-        test('should measure weird characters when asked', () => {
-            expect(textWidth('HI∃', 7)).toBe(21);
+        test('should use a default width for weird characters', () => {
+            expect(textWidth('HI∃')).toBe(22);
         });
     });
 });

@@ -13,8 +13,8 @@ describe('v2', () => {
 
         test('uses color attributes', () => {
             const sections = [
-                ['foo', 'lightgreen'],
-                ['bar', 'ef03BB'],
+                { text: 'foo', color: 'lightgreen' },
+                { text: 'bar', color: 'ef03BB' },
             ];
             const have = sectionsToData(sections);
             expect(have.sections[0].color).toBe('#90ee90');
@@ -22,14 +22,20 @@ describe('v2', () => {
         });
 
         test('uses stroke attributes', () => {
-            const sections = ['foo', ['bar', 'd3d3d3', 'ffffff']];
+            const sections = [
+                'foo',
+                { text: 'bar', color: 'd3d3d3', strokeColor: 'ffffff' },
+            ];
             const have = sectionsToData(sections);
             expect(have.sections[0].stroke).toBeNull();
             expect(have.sections[1].stroke).toBe('#ffffff');
         });
 
         test('ignores stroke attributes with invalid color', () => {
-            const sections = ['foo', ['bar', 'd3d3d3', 'foobar']];
+            const sections = [
+                'foo',
+                { text: 'bar', color: 'd3d3d3', strokeColor: 'foobar' },
+            ];
             const have = sectionsToData(sections);
             expect(have.sections[0].stroke).toBeNull();
             expect(have.sections[1].stroke).toBeNull();
@@ -76,7 +82,10 @@ describe('v2', () => {
         });
 
         test('ignores unknown attributes', () => {
-            const sections = [['foo', 'mork', 'mindy'], ['bar', 'oh no not this']];
+            const sections = [
+                { text: 'foo', color: 'mork', strokeColor: 'mindy' },
+                { text: 'bar', color: 'oh no not this' },
+            ];
             const want = {
                 width: 57,
                 height: 20,
@@ -118,9 +127,9 @@ describe('v2', () => {
         test('lays out a complex example', () => {
             const sections = [
                 'foo/far;fun',
-                ['bar\nbaz', 'orange'],
-                ['mork "mindy"', 'olive'],
-                ['<∀>', 'moccasin'],
+                { text: 'bar\nbaz', color: 'orange' },
+                { text: 'mork "mindy"', color: 'olive' },
+                { text: '<∀>', color: 'moccasin' },
             ];
             const want = {
                 width: 219,
@@ -202,7 +211,7 @@ describe('v2', () => {
         });
 
         test('renders a named color correctly', async () => {
-            const sections = ['foo', ['bar', 'lightgreen']];
+            const sections = ['foo', { text: 'bar', color: 'lightgreen' }];
             const svg = v2(sections);
             expect(svg).toEqual(await getMockBadge('v2-one-color'));
         });
@@ -210,9 +219,9 @@ describe('v2', () => {
         test('renders the example correctly', async () => {
             const sections = [
                 'foo/far;fun',
-                ['bar\nbaz', 'orange'],
-                ['mork "mindy"', 'olive', 'white'],
-                ['<∀>', 'moccasin'],
+                { text: 'bar\nbaz', color: 'orange' },
+                { text: 'mork "mindy"', color: 'olive', strokeColor: 'white' },
+                { text: '<∀>', color: 'moccasin' },
             ];
 
             const svg = v2(sections);
@@ -220,7 +229,7 @@ describe('v2', () => {
         });
 
         test('renders stroke correctly', async () => {
-            const sections = ['foo', ['bar', 'd3d3d3', 'white']];
+            const sections = ['foo', { text: 'bar', color: 'd3d3d3', strokeColor: 'white' }];
             const svg = v2(sections);
             expect(svg).toEqual(await getMockBadge('v2-foo-bar-stroke'));
         });
