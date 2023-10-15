@@ -1,6 +1,8 @@
+import { readFile } from 'fs/promises';
+import path from 'path';
+
 import { badge, basic, buildBadgeConfig } from './badge';
 import { basicColors } from './color';
-import { getMockBadge } from './test-utils/badge-utils';
 
 describe('badge', () => {
     describe('basic', () => {
@@ -251,3 +253,8 @@ describe('badge', () => {
         });
     });
 });
+
+async function getMockBadge(name: string): Promise<string> {
+    return (await readFile(path.join(__dirname, 'test-data', `${name}.svg`))).toString().trim();
+}
+
