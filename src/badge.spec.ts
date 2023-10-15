@@ -9,7 +9,8 @@ describe('badge', () => {
         });
 
         test('it should be able to create a long badge', async () => {
-            expect(basic('batmanandrobinforever', 'component', basicColors.green)).toBe(await getMockBadge('basic-long'));
+            expect(basic('batmanandrobinforever', 'component', basicColors.green))
+                .toBe(await getMockBadge('basic-long'));
         });
 
         test('it should prevent bad xml values', async () => {
