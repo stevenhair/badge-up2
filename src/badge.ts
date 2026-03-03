@@ -83,13 +83,7 @@ const TEMPLATE = dot.template(`
 `);
 
 export function badge(sections: Section[]): string {
-    const raw = TEMPLATE(buildBadgeConfig(sections))
-        // Working around a bug in svgo: https://github.com/svg/svgo/issues/1498
-        // Workaround courtesy of brettz9: https://github.com/yahoo/badge-up/pull/21
-        .replace(/&#(x3c|60);/gi, '&lt;')
-        .replace(/&#(x26|38);/gi, '&amp;');
-
-    return svgo.optimize(raw).data;
+    return svgo.optimize(TEMPLATE(buildBadgeConfig(sections))).data;
 }
 
 export function basic(field1: string, field2: string, color: string): string {
