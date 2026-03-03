@@ -1,6 +1,6 @@
 import colors from 'css-color-names';
 
-const COLOR_REGEX = /^#?[0-9a-f]{3,6}$/i;
+const COLOR_REGEX = /^#?[0-9a-f]{3|6}$/i;
 
 export const basicColors = {
     brightgreen: '#4C1',
