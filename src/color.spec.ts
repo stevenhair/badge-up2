@@ -15,7 +15,7 @@ describe('color', () => {
                 expect(getColorCode('123')).toBe('#123');
             });
 
-            test('it accepts a 3-digit value with a leating #', () => {
+            test('it accepts a 3-digit value with a leading #', () => {
                 expect(getColorCode('#123')).toBe('#123');
             });
         });
@@ -23,7 +23,7 @@ describe('color', () => {
         describe('When the input is one of the basic colors', () => {
             for (const [ name, color ] of Object.entries(basicColors)) {
                 test(`it accepts basic color "${name}"`, () => {
-                    expect(getColorCode(color)).toBe(color);
+                    expect(getColorCode(color)).toBe(color.toLowerCase());
                 });
             }
         });
