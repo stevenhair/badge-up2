@@ -21,7 +21,7 @@ describe('color', () => {
         });
 
         describe('When the input is one of the basic colors', () => {
-            for (const [ name, color ] of Object.entries(basicColors)) {
+            for (const [name, color] of Object.entries(basicColors)) {
                 test(`it accepts basic color "${name}"`, () => {
                     expect(getColorCode(color)).toBe(color.toLowerCase());
                 });
