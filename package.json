@@ -39,6 +39,7 @@
     "@eslint/js": "^10.0.1",
     "@stylistic/eslint-plugin": "^5.7.0",
     "@stylistic/eslint-plugin-ts": "^4.0.1",
+    "@tsconfig/node18": "^18.2.6",
     "@tsconfig/node24": "^24.0.4",
     "@tsconfig/strictest": "^2.0.8",
     "@types/dot": "^1.1.5",
