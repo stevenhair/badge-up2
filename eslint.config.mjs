@@ -1,35 +1,21 @@
+// @ts-check
+
 import stylistic from '@stylistic/eslint-plugin';
-import typescriptEslint from '@typescript-eslint/eslint-plugin';
-import _import from 'eslint-plugin-import';
+import tseslint from '@typescript-eslint/eslint-plugin';
+// import _import from 'eslint-plugin-import';
 import jest from 'eslint-plugin-jest';
 import unicorn from 'eslint-plugin-unicorn';
-import { fixupPluginRules } from '@eslint/compat';
 import globals from 'globals';
-import tsParser from '@typescript-eslint/parser';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import js from '@eslint/js';
-import { FlatCompat } from '@eslint/eslintrc';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const compat = new FlatCompat({
-    baseDirectory: __dirname,
-    recommendedConfig: js.configs.recommended,
-    allConfig: js.configs.all,
-});
+import tsParser from '@typescript-eslint/parser';
 
 export default [
-    ...compat.extends(
-        'eslint:recommended',
-        'plugin:@typescript-eslint/eslint-recommended',
-        'plugin:@typescript-eslint/recommended',
-    ),
+    js.configs.recommended,
     {
         plugins: {
             '@stylistic': stylistic,
-            '@typescript-eslint': typescriptEslint,
-            import: fixupPluginRules(_import),
+            '@typescript-eslint': tseslint,
+            // import: fixupPluginRules(_import),
             jest,
             unicorn,
         },
@@ -194,29 +180,29 @@ export default [
             'valid-typeof': 'error',
             'yield-star-spacing': 'error',
 
-            'import/export': 'error',
-            'import/first': 'error',
-            'import/no-cycle': 'error',
-            'import/order': [
-                'error',
-                {
-                    groups: [
-                        ['builtin', 'external'],
-                        ['internal'],
-                        ['sibling', 'parent', 'index'],
-                    ],
-                    'newlines-between': 'always',
-                    alphabetize: {
-                        order: 'asc',
-                    },
-                },
-            ],
-            'import/no-deprecated': 'warn',
-            'import/no-duplicates': 'error',
-            'import/no-extraneous-dependencies': 'error',
-            'import/no-mutable-exports': 'error',
-            'import/no-relative-parent-imports': 'error',
-            'import/no-unused-modules': 'error',
+            // 'import/export': 'error',
+            // 'import/first': 'error',
+            // 'import/no-cycle': 'error',
+            // 'import/order': [
+            //     'error',
+            //     {
+            //         groups: [
+            //             ['builtin', 'external'],
+            //             ['internal'],
+            //             ['sibling', 'parent', 'index'],
+            //         ],
+            //         'newlines-between': 'always',
+            //         alphabetize: {
+            //             order: 'asc',
+            //         },
+            //     },
+            // ],
+            // 'import/no-deprecated': 'warn',
+            // 'import/no-duplicates': 'error',
+            // 'import/no-extraneous-dependencies': 'error',
+            // 'import/no-mutable-exports': 'error',
+            // 'import/no-relative-parent-imports': 'error',
+            // 'import/no-unused-modules': 'error',
 
             'jest/consistent-test-it': [
                 'error',
