@@ -4,10 +4,13 @@
     "@tsconfig/strictest"
   ],
   "compilerOptions": {
+    "module": "nodenext",
     "removeComments": true,
+    "esModuleInterop": true,
     "sourceMap": true,
     "outDir": "./dist",
     "rootDir": "./src",
+    "resolveJsonModule": true
   },
   "include": [
     "src/**/*.ts"
